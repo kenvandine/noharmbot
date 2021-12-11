@@ -3,7 +3,7 @@
 Install necessary dependencies, discord and dadjokes python libraries are required
 
 `
-pip install discord dadjokes
+pip3 install discord dadjokes
 `
 
 To run:
