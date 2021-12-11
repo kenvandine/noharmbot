@@ -40,7 +40,7 @@ async def on_message(message):
     if message.content.startswith('-help'):
         await message.channel.send(usage)
 
-    if message.content.startswith('-coinflip'):
+    if message.content.startswith('-coinflip') or message.content.startswith('-cf'):
         await message.channel.send(coinToss())
 
 token = os.getenv('NOHARM_TOKEN')
