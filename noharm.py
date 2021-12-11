@@ -1,5 +1,6 @@
 import os
 import discord
+import random
 from dadjokes import Dadjoke
 
 client = discord.Client()
@@ -11,6 +12,13 @@ Available commands:
     -hello 
     -dadjoke
 '''.format(length='multi-line', ordinal='second')
+
+def coinToss():
+    flip = random.randint(0, 1)
+    if (flip == 0):
+        return "Heads"
+    else:
+        return "Tails"
 
 @client.event
 async def on_ready():
@@ -32,7 +40,8 @@ async def on_message(message):
     if message.content.startswith('-help'):
         await message.channel.send(usage)
 
-    
+    if message.content.startswith('-coinflip'):
+        await message.channel.send(coinToss())
 
 token = os.getenv('NOHARM_TOKEN')
 if token:
