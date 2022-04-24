@@ -17,6 +17,26 @@ Available commands:
 
 main_guild_id = 918622667211415602 # server ID
 
+users = [
+    {
+        'github': 'kenvandine',
+        'discord': 'kenvandine#5775',
+    },
+    {
+        'github': 'kenvandine',
+        'discord': 'kenvandine#5775',
+    },
+]
+
+def get_discord_from_github(name):
+    for u in users:
+        print(u)
+        print(u['github'])
+        if u['github'] == name:
+            return u['discord']
+        else:
+            return None
+
 my_awards = {
     main_guild_id : [
         RoleAward(role_id=831672678586777601, level_requirement=1, role_name='Rookie'),
@@ -89,17 +109,18 @@ async def cointoss(ctx):
 
 @bot.event
 async def on_message(message):
-    if message.author == "GitHub#0000":
+    if str(message.author) == "GitHub#0000":
         print ("GitHub")
         print(str(message.embeds))
         for e in message.embeds:
-            print (e.author)
             print ("name: " + e.author.name)
             print ("title: " + e.title)
             #print ("description: " + e.description)
-            print (e.type)
-            print ("type: " + e.type)
-    await lvl.award_xp(amount=15, message=message)
+            user = get_discord_from_github(e.author.name)
+            if user is not None:
+                member = message.guild.get_member_named(user)
+                await lvl.add_xp(member=member, amount=15)
+                #await lvl.award_xp(amount=15, message=message)
     await bot.process_commands(message)
 
 token = os.getenv('NOHARM_TOKEN')
