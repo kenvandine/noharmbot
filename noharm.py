@@ -37,6 +37,27 @@ def get_discord_from_github(name):
         else:
             return None
 
+def check_github_message(title):
+    if "New comment" in title:
+        return 5
+    elif "New branch" in title:
+        return 10
+    elif "Pull request opened" in title:
+        return 15
+    elif "Pull request closed" in title:
+        return 15
+    elif "New issue" in title:
+        return 10
+    elif "Issue closed" in title:
+        return 10
+    elif "review comment" in title:
+        return 5
+    elif "review submitted" in title:
+        return 15
+    else:
+        return 0
+
+
 my_awards = {
     main_guild_id : [
         RoleAward(role_id=831672678586777601, level_requirement=1, role_name='Rookie'),
@@ -113,15 +134,23 @@ async def on_message(message):
         print ("GitHub")
         print(str(message.embeds))
         for e in message.embeds:
-            print ("name: " + e.author.name)
-            print ("title: " + e.title)
-            #print ("description: " + e.description)
-            user = get_discord_from_github(e.author.name)
-            if user is not None:
-                member = message.guild.get_member_named(user)
-                await lvl.add_xp(member=member, amount=15)
-                #await lvl.award_xp(amount=15, message=message)
-    await bot.process_commands(message)
+            if e is not None:
+                try:
+                    xp = check_github_message (e.title)
+                    print ("XP: " + xp)
+                    if xp == 0:
+                        continue
+                    user = get_discord_from_github(e.author.name)
+                    if user is not None:
+                        member = message.guild.get_member_named(user)
+                        await lvl.add_xp(member=member, amount=xp)
+                        #await lvl.award_xp(amount=15, message=message)
+                    await bot.process_commands(message)
+                except TypeError:
+                    print("TypeError: not an Embed")
+            await message.delete() # Don't display all messages from the bot
+    else: # Only continue processing message if it wasn't sent by GitHub
+        await bot.process_commands(message)
 
 token = os.getenv('NOHARM_TOKEN')
 if token:

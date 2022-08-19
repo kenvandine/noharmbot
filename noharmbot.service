@@ -1,0 +1,19 @@
+[Unit]
+Description=%I NoHarm Bot
+After=multi-user.target
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=python3 /home/drew/noharmbot/noharmbot.py
+User=drew
+Group=drew
+Type=idle
+Restart=always
+RestartSec=15
+RestartPreventExitStatus=0
+TimeoutStopSec=10
+Environment=NOHARM_TOKEN=<token>
+
+[Install]
+WantedBy=multi-user.target
